@@ -1,6 +1,6 @@
 import const
 import error
-from action import Add, Open, Drop
+from cmd import Add, Open, Drop
 
 
 def task_factory(action, param):

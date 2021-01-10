@@ -1,0 +1,8 @@
+# python
+.env
+.idea
+*.pyc
+__pycache__
+
+# bookmark
+pages

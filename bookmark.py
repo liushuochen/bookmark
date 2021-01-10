@@ -2,7 +2,7 @@ import sys
 import error
 import const
 import util
-from help import print_doc
+from cmd.help import print_doc
 from task_factory import task_factory
 
 
