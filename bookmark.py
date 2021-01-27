@@ -2,11 +2,12 @@ import sys
 import error
 import const
 import util
+import traceback
 from cmd.help import print_doc
 from task_factory import task_factory
 
 
-def parse_args(args: list):
+def parse_args(args):
     action = parse_action(args[0])
     if action == const.action.help:
         print_doc(action=action)
@@ -24,7 +25,7 @@ def parse_args(args: list):
     return action, param
 
 
-def parse_action(action: str) -> str:
+def parse_action(action):
     support_operator = {
         const.action.add,
         const.action.drop,
@@ -38,7 +39,7 @@ def parse_action(action: str) -> str:
     return action
 
 
-def parse_param(args: list) -> dict:
+def parse_param(args):
     index = 0
     param = dict()
     while index < len(args):
@@ -59,15 +60,17 @@ def parse_param(args: list) -> dict:
     return param
 
 
-if __name__ == '__main__':
+def execute():
     try:
-        task = task_factory(*parse_args(sys.argv[1:]))
-        task.execute()
-    except error.InvalidActionError as e:
-        print(str(e))
-    except IndexError as e:
-        print_doc(str(e))
-    except error.AddError as e:
-        pass
-    else:
-        exit(0)
+        task_factory(*parse_args(sys.argv[1:])).execute()
+    except Exception as e:
+        if isinstance(e, error.BaseError):
+            print(str(e))
+        elif isinstance(e, IndexError):
+            print("Invalid command request. Please read help doc first.")
+        else:
+            print(traceback.format_exc())
+
+
+if __name__ == '__main__':
+    execute()
