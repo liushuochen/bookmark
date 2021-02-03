@@ -5,6 +5,8 @@ import util
 import traceback
 from cmd.help import print_doc
 from task_factory import task_factory
+from logger import logger
+from logger.style import style
 
 
 def parse_args(args):
