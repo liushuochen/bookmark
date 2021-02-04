@@ -43,7 +43,9 @@ def parse_action(action):
 
 def parse_param(args):
     index = 0
-    param = dict()
+    param = {
+        "debug": True
+    }
     while index < len(args):
         if args[index] in {"--help", "-h"}:
             param["help"] = True
@@ -54,6 +56,12 @@ def parse_param(args):
         elif args[index] in {"--url", "-u"}:
             index += 1
             param["url"] = args[index]
+        elif args[index] == "--path":
+            index += 1
+            param["path"] = args[index]
+            logger.path = param["path"]
+        elif args[index] == "--silence":
+            param["debug"] = False
         else:
             # nothing to do.
             pass
@@ -67,11 +75,19 @@ def execute():
         task_factory(*parse_args(sys.argv[1:])).execute()
     except Exception as e:
         if isinstance(e, error.BaseError):
-            print(str(e))
+            logger.error(str(e), print_type=style.type.flash, font=style.font.red)
         elif isinstance(e, IndexError):
-            print("Invalid command request. Please read help doc first.")
+            logger.error(
+                "Invalid command request. Please read help doc first.",
+                print_type=style.type.flash,
+                font=style.font.red,
+            )
         else:
-            print(traceback.format_exc())
+            logger.error(
+                "\n" + traceback.format_exc(),
+                print_type=style.type.flash,
+                font=style.font.red,
+            )
 
 
 if __name__ == '__main__':
