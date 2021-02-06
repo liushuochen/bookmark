@@ -1,6 +1,7 @@
 import util
 import json
 import datetime
+import os
 from cmd.base import Base
 from error import AddError
 
@@ -21,14 +22,14 @@ class PageAdd(Base):
 
     def check_exist(self):
         self.logger.info("check page %s exists..." % self.name)
-        if not util.is_dir(util.storage_path()):
+        if not os.path.isdir(util.storage_path()):
             util.create_storage_dir(util.storage_path())
 
         if self.name in util.pages():
             raise AddError("Page %s has already exist" % self.name)
 
     def add(self):
-        path = util.path_join(util.storage_path(), self.name + ".json")
+        path = os.path.join(util.storage_path(), self.name + ".json")
         now = str(datetime.datetime.now())
         data = {
             "name": self.name,

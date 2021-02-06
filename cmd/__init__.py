@@ -39,7 +39,7 @@ class Open(ActionBase):
 
     def open(self):
         if self.name is not None:
-            path = util.path_join(util.storage_path(), self.name + ".json")
+            path = util.path_join(self.name + ".json")
             with open(path, "r") as json_file:
                 data = json.load(json_file)
             webbrowser.open(data["url"])

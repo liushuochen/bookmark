@@ -9,4 +9,4 @@ class Edit(Base):
         Base.__init__(self, debug, log_file_path)
         self.name = name
         self.url = url
-        self.path = util.path_join(util.storage_path(), name + ".json")
+        self.path = util.path_join(name + ".json")

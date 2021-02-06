@@ -12,5 +12,5 @@ class Drop(Base):
         self.drop()
 
     def drop(self):
-        path = util.path_join(util.storage_path(), self.name + ".json")
+        path = util.path_join(self.name + ".json")
         util.delete_file(path)

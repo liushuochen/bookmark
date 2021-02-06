@@ -5,43 +5,37 @@ def isfile(path):
     return os.path.isfile(path)
 
 
-def is_install() -> bool:
+def is_install():
     return "bookmark" in set(os.listdir("/usr/bin"))
 
 
-def root_path() -> str:
+def root_path():
     util_path = os.path.realpath(__file__)
     util_path_list = util_path.split("/")
     return "/".join(util_path_list[:-1])
 
 
 def path_join(*args):
-    return os.path.join(*args)
+    arg_list = list(args)
+    arg_list.insert(0, root_path())
+    return os.path.join(*arg_list)
 
 
-def get_version() -> str:
-    with open(path_join(root_path(), "bm.version"), "r") as file:
+def get_version():
+    with open(path_join("bm.version"), "r") as file:
         version = file.read().strip()
     return version
 
 
-def storage_path() -> str:
-    return path_join(root_path(), "pages")
+def storage_path():
+    return path_join("pages")
 
 
-def file_exist(path) -> bool:
+def file_exist(path):
     return os.path.exists(path)
 
 
-def is_dir(path) -> bool:
-    return os.path.isdir(path)
-
-
-def is_file(path) -> bool:
-    return os.path.isfile(path)
-
-
-def system(command) -> int:
+def system(command):
     return os.system(command)
 
 
@@ -49,7 +43,7 @@ def create_storage_dir(path):
     os.mkdir(path)
 
 
-def pages() -> set:
+def pages():
     file_list = os.listdir(storage_path())
     page_set = set()
     for file in file_list:
@@ -63,7 +57,7 @@ def pages() -> set:
     return page_set
 
 
-def is_json_file(filename: str) -> bool:
+def is_json_file(filename):
     filename = filename.strip(".")
     if "." not in filename:
         return False
