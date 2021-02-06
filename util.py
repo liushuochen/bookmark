@@ -1,10 +1,6 @@
 import os
 
 
-def isfile(path):
-    return os.path.isfile(path)
-
-
 def is_install():
     return "bookmark" in set(os.listdir("/usr/bin"))
 
@@ -19,12 +15,6 @@ def path_join(*args):
     arg_list = list(args)
     arg_list.insert(0, root_path())
     return os.path.join(*arg_list)
-
-
-def get_version():
-    with open(path_join("bm.version"), "r") as file:
-        version = file.read().strip()
-    return version
 
 
 def storage_path():

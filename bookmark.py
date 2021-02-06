@@ -1,30 +1,37 @@
 import sys
 import error
 import const
-import util
 import traceback
-from cmd.help import print_doc
 from task_factory import task_factory
 from logger import logger
 from logger.style import style
 
 
 def parse_args(args):
-    action = parse_action(args[0])
-    if action == const.action.help:
-        print_doc(action=action)
-    if action == const.action.version:
-        print(util.get_version())
-        exit(0)
+    sub_cmd = parse_subcommand(args[0])
 
     if len(args) > 1:
-        param = parse_param(args[1:])
+        action = parse_action(args[1])
+    else:
+        action = None
+
+    if len(args) > 2:
+        param = parse_param(args[2:])
     else:
         param = dict()
+    return sub_cmd, action, param
 
-    if param.get("help", False):
-        print_doc(action=action)
-    return action, param
+
+def parse_subcommand(scmd):
+    support_subcommand = {
+        const.subcommand.help,
+        const.subcommand.version,
+        const.subcommand.page,
+        const.subcommand.folder,
+    }
+    if scmd not in support_subcommand:
+        raise error.InvalidSubcommandError(scmd)
+    return scmd
 
 
 def parse_action(action):
@@ -37,14 +44,14 @@ def parse_action(action):
     }
 
     if action not in support_operator:
-        raise error.InvalidActionError("%s do not exist." % action)
+        raise error.InvalidActionError(action)
     return action
 
 
 def parse_param(args):
     index = 0
     param = {
-        "debug": True
+        "debug": True,
     }
     while index < len(args):
         if args[index] in {"--help", "-h"}:
@@ -63,8 +70,9 @@ def parse_param(args):
         elif args[index] == "--silence":
             param["debug"] = False
         else:
-            # nothing to do.
-            pass
+            # action value
+            if "action_value" in param:
+                raise error.InvalidParamError(args[index])
 
         index += 1
     return param
