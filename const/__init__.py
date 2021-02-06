@@ -9,6 +9,31 @@ def single(cls):
 
 
 @single
+class Subcommand(object):
+    def __init__(self):
+        self.__help = "help"
+        self.__version = "version"
+        self.__page = "page"
+        self.__folder = "folder"
+
+    @property
+    def help(self):
+        return self.__help
+
+    @property
+    def version(self):
+        return self.__version
+
+    @property
+    def page(self):
+        return self.__page
+
+    @property
+    def folder(self):
+        return self.__folder
+
+
+@single
 class Action(object):
     def __init__(self):
         self.__add = "add"
@@ -39,3 +64,4 @@ class Action(object):
 
 
 action = Action()
+subcommand = Subcommand()

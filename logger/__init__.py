@@ -3,9 +3,17 @@ from logger.style import style
 
 
 class Logger(object):
-    def __init__(self, debug=True, path=None):
-        self.__debug = debug
+    def __init__(self, output=True, path=None):
+        self.__output = output
         self.__path = path
+
+    @property
+    def output(self):
+        return self.__output
+
+    @output.setter
+    def output(self, value):
+        self.__output = value
 
     @property
     def path(self):
@@ -34,7 +42,7 @@ class Logger(object):
         title = "[%s] [INFO]" % str(datetime.datetime.now())
         color_log = title + " " + color_message
         log = title + " " + message
-        if self.__debug:
+        if self.output:
             print(color_log)
 
         if self.path is not None:
@@ -65,7 +73,7 @@ class Logger(object):
         title = "[%s] [WARNING]" % str(datetime.datetime.now())
         color_log = title + " " + color_message
         log = title + " " + message
-        if self.__debug:
+        if self.output:
             print(color_log)
 
         if self.path is not None:
@@ -81,7 +89,7 @@ class Logger(object):
         title = "[%s] [DEBUG]" % str(datetime.datetime.now())
         color_log = title + " " + color_message
         log = title + " " + message
-        if self.__debug:
+        if self.output:
             print(color_log)
 
         if self.path is not None:

@@ -2,69 +2,26 @@ import util
 import error
 import json
 import webbrowser
+from cmd.page import PageAdd
+from cmd.help import Help
 
 
-class ActionBase(object):
-    def __init__(self):
-        self.__tasks = []
-    
-    @property
-    def task_list(self):
-        return self.__tasks
-    
-    def registry(self, task, index=-1):
-        if index == -1:
-            self.task_list.append(task)
-        else:
-            self.task_list.insert(index, task)
-    
-    def execute(self):
-        for subtask in self.task_list:
-            subtask()
-    
-
-class Add(ActionBase):
-    def __init__(self, name, url):
-        super().__init__()
-        self.name = name
-        self.url = url
-
-        self.registry(self.check)
-        self.registry(self.add)
-
-    def check(self):
-        if not util.is_dir(util.storage_path()):
-            util.create_storage_dir(util.storage_path())
-
-        if self.name in util.pages():
-            raise error.AddError("Page %s has already exist" % self.name)
-
-    def add(self):
-        path = util.path_join(util.storage_path(), self.name + ".json")
-        data = {
-            "name": self.name,
-            "url": self.url,
-        }
-
-        with open(path, "w") as json_file:
-            json_file.write(json.dumps(data))
+def help_doc(param):
+    return Help()
 
 
-class Drop(ActionBase):
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
-        self.path = util.path_join(util.storage_path(), name + ".json")
+def add_page(param):
+    name = param.get("action_value", None)
+    if name is None:
+        raise error.AddError("missing name request")
 
-        self.registry(self.check)
-        self.registry(self.drop)
+    url = param.get("url", None)
+    if url is None:
+        raise error.AddError("missing url request")
 
-    def check(self):
-        if not util.file_exist(self.path):
-            raise error.PageNotFoundError("page %s not found." % self.name)
-
-    def drop(self):
-        util.delete_file(self.path)
+    debug = param.get("debug", False)
+    file = param.get("path", None)
+    return PageAdd(name, url, debug, file)
 
 
 class Open(ActionBase):

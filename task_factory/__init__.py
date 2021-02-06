@@ -1,31 +1,18 @@
 import const
 import error
-from cmd import Add, Open, Drop
+import cmd
 
 
-def task_factory(action, param):
-    if action == const.action.add:
-        name = param.get("name", None)
-        url = param.get("url", None)
-        if name is None or url is None:
-            raise ValueError("Missing name and url.")
-        instance = Add(name, url)
-
-    elif action == const.action.open:
-        name = param.get("name", None)
-        url = param.get("url", None)
-        if name is None and url is None:
-            raise ValueError("Missing name or url")
-        instance = Open(name, url)
-
-    elif action == const.action.drop:
-        name = param.get("name", None)
-        if name is None:
-            raise ValueError("Missing name")
-        instance = Drop(name)
-
+def task_factory(subcommand, action, param):
+    if subcommand == const.subcommand.help:
+        instance = cmd.help_doc(param)
+    elif subcommand == const.subcommand.page:
+        if action == const.action.add:
+            instance = cmd.add_page(param)
+        else:
+            raise error.InvalidActionError(action)
     else:
-        raise error.InvalidActionError("Unsupported action %s." % action)
+        raise error.InvalidSubcommandError("Unsupported action %s." % action)
     return instance
 
 
