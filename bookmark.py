@@ -73,6 +73,8 @@ def parse_param(args):
             # action value
             if "action_value" in param:
                 raise error.InvalidParamError(args[index])
+            else:
+                param["action_value"] = args[index]
 
         index += 1
     return param

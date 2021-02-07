@@ -26,7 +26,7 @@ class PageAdd(Base):
             util.create_storage_dir(util.storage_path())
 
         if self.name in util.pages():
-            raise AddError("Page %s has already exist" % self.name)
+            raise AddError("page %s has already exist" % self.name)
 
     def add(self):
         path = os.path.join(util.storage_path(), self.name + ".json")
@@ -40,5 +40,5 @@ class PageAdd(Base):
         }
 
         with open(path, "w") as json_file:
-            json_file.write(json.dumps(data))
+            json_file.write(json.dumps(data, indent=4))
         self.logger.info("add page %s successfully" % self.name)
