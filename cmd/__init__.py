@@ -1,8 +1,5 @@
-import util
 import error
-import json
-import webbrowser
-from cmd.page import PageAdd
+from cmd.page import PageAdd, PageDrop
 from cmd.help import Help
 from cmd.version import Version
 
@@ -27,6 +24,16 @@ def add_page(param):
     debug = param.get("debug", False)
     file = param.get("path", None)
     return PageAdd(name, url, debug, file)
+
+
+def drop_page(param):
+    name = param.get("action_value", None)
+    if name is None:
+        raise error.AddError("missing name request")
+
+    debug = param.get("debug", False)
+    file = param.get("path", None)
+    return PageDrop(name, debug, file)
 
 
 # class Open(ActionBase):

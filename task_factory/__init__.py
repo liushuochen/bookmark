@@ -13,6 +13,8 @@ def task_factory(subcommand, action, param):
     elif subcommand == const.subcommand.page:
         if action == const.action.add:
             instance = cmd.add_page(param)
+        elif action == const.action.drop:
+            instance = cmd.drop_page(param)
         else:
             raise error.InvalidActionError(action)
     else:
