@@ -2,6 +2,13 @@ import error
 from cmd.page import PageAdd, PageDrop
 from cmd.help import Help
 from cmd.version import Version
+from cmd.default import Default
+
+
+def default_scmd(subcommand, param):
+    debug = param.get("debug", False)
+    file = param.get("path", None)
+    return Default(subcommand, debug, file)
 
 
 def help_doc(param):

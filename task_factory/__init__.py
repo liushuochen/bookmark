@@ -18,5 +18,5 @@ def task_factory(subcommand, action, param):
         else:
             raise error.InvalidActionError(action)
     else:
-        raise error.InvalidSubcommandError("Unsupported action %s." % action)
+        instance = cmd.default_scmd(subcommand, param)
     return instance

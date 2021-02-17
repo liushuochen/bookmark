@@ -13,16 +13,19 @@ class BaseError(Exception):
 class InvalidSubcommandError(BaseError):
     def __init__(self, subcommand):
         BaseError.__init__(self, "Invalid subcommand `%s`" % subcommand)
+        self.subcommand = subcommand
 
 
 class InvalidActionError(BaseError):
     def __init__(self, action):
         BaseError.__init__(self, "Invalid action `%s`" % action)
+        self.action = action
 
 
 class InvalidParamError(BaseError):
     def __init__(self, param):
         BaseError.__init__(self, "Invalid param `%s`" % param)
+        self.param = param
 
 
 class AddError(BaseError):
@@ -32,3 +35,4 @@ class AddError(BaseError):
 class PageNotFoundError(BaseError):
     def __init__(self, page):
         BaseError.__init__(self, "Page %s not found" % page)
+        self.page = page

@@ -62,3 +62,10 @@ class PageDrop(Base):
         path = util.path_join("pages", self.name + ".json")
         util.delete_file(path)
         self.logger.info("delete page %s successfully" % self.name)
+
+
+class PageEdit(Base):
+    def __init__(self, name, url, debug, log_file_path):
+        Base.__init__(self, debug, log_file_path)
+        self.name = name
+        self.url = url

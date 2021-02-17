@@ -15,5 +15,8 @@ Usage:
         Drop a page.
         bookmark page drop <name>
 
+        Edit a page
+        bookmark page edit <name> [--name <new_name>] [--url <url>]
+
         e.g.
         bookmark page add baidu --url http://www.baidu.com/
