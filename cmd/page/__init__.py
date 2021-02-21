@@ -2,6 +2,8 @@ import util
 import json
 import datetime
 import os
+import threading
+from prettytable import PrettyTable
 from cmd.base import Base
 from error import PageExistError, PageNotFoundError
 
@@ -108,3 +110,45 @@ class PageEdit(PageBase):
         if new_path is not None:
             os.renames(old_path, new_path)
         self.logger.info("edit page %s successfully" % self.new_name)
+
+
+class PageList(Base):
+    def __init__(self, debug, log_file_path):
+        Base.__init__(self, debug, log_file_path)
+        self.pages = dict()
+
+    def execute(self):
+        self.get_pages_simple_message()
+        self.show_pages()
+
+    def show_pages(self):
+        table = PrettyTable()
+        table.field_names = ["NAME", "URL"]
+        for name in self.pages:
+            table.add_row([name, self.pages[name]])
+        table.border = False
+        self.logger.console(table)
+
+    def get_pages_simple_message(self):
+        name_list = os.listdir(util.storage_path())
+        thread_list = []
+        for name in name_list:
+            if not util.is_json_file(name):
+                continue
+
+            thread = threading.Thread(
+                target=self._get_simple_message,
+                args=(name,),
+            )
+            thread.start()
+            thread_list.append(thread)
+
+        for thread in thread_list:
+            thread.join()
+
+    def _get_simple_message(self, page_name):
+        path = util.path_join(util.storage_path(), page_name)
+        with open(path, "r") as page_file:
+            data = json.load(page_file)
+        url = data["url"]
+        self.pages[page_name.strip(".json")] = url

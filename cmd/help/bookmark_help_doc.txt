@@ -9,14 +9,17 @@ Usage:
         page           Operation of website.
 
     page
-        Add a new page.
+        1. Add a new page.
         bookmark page add <name> --url <url>
 
-        Drop a page.
+        2. Drop a page.
         bookmark page drop <name>
 
-        Edit a page
+        3. Edit a page
         bookmark page edit <name> [--name <new_name>] [--url <url>]
+
+        4. Get a list of page
+        bookmark page list
 
         e.g.
         bookmark page add baidu --url http://www.baidu.com/

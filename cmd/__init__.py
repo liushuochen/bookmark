@@ -1,5 +1,5 @@
 import error
-from cmd.page import PageAdd, PageDrop, PageEdit
+import cmd.page
 from cmd.help import Help
 from cmd.version import Version
 from cmd.default import Default
@@ -30,7 +30,7 @@ def add_page(param):
 
     debug = param.get("debug", False)
     file = param.get("path", None)
-    return PageAdd(name, url, debug, file)
+    return cmd.page.PageAdd(name, url, debug, file)
 
 
 def drop_page(param):
@@ -40,7 +40,7 @@ def drop_page(param):
 
     debug = param.get("debug", False)
     file = param.get("path", None)
-    return PageDrop(name, debug, file)
+    return cmd.page.PageDrop(name, debug, file)
 
 
 def edit_page(param):
@@ -52,7 +52,14 @@ def edit_page(param):
     new_url = param.get("url", None)
     debug = param.get("debug", False)
     file = param.get("path", None)
-    return PageEdit(name, new_name, new_url, debug, file)
+    return cmd.page.PageEdit(name, new_name, new_url, debug, file)
+
+
+def list_page(param):
+    debug = param.get("debug", False)
+    file = param.get("path", None)
+    return cmd.page.PageList(debug, file)
+
 
 
 # class Open(ActionBase):
