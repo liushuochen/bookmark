@@ -3,6 +3,7 @@
 .idea
 *.pyc
 __pycache__
+bookmark/
 
 # bookmark
-pages
+pages/

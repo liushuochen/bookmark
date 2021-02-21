@@ -47,6 +47,7 @@ def install():
 
     os.system("chmod 777 bookmark")
     os.system("mv bookmark /usr/local/bin/bookmark")
+    print("install bookmark finished")
 
 
 if __name__ == '__main__':
