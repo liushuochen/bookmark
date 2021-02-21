@@ -2,7 +2,7 @@ import os
 
 
 def is_install():
-    return "bookmark" in set(os.listdir("/usr/bin"))
+    return "bookmark" in set(os.listdir("/usr/local/bin"))
 
 
 def root_path():
