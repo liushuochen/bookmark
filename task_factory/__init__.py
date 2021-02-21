@@ -15,8 +15,11 @@ def task_factory(subcommand, action, param):
             instance = cmd.add_page(param)
         elif action == const.action.drop:
             instance = cmd.drop_page(param)
+        elif action == const.action.edit:
+            instance = cmd.edit_page(param)
         else:
             raise error.InvalidActionError(action)
+
     else:
         instance = cmd.default_scmd(subcommand, param)
     return instance

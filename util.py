@@ -29,11 +29,17 @@ def system(command):
     return os.system(command)
 
 
-def create_storage_dir(path):
-    os.mkdir(path)
+def create_storage_dir():
+    path = storage_path()
+    if not os.path.exists(path):
+        os.mkdir(path)
 
 
 def pages():
+    path = storage_path()
+    if not os.path.isdir(path):
+        return set()
+
     file_list = os.listdir(storage_path())
     page_set = set()
     for file in file_list:

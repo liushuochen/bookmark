@@ -28,11 +28,23 @@ class InvalidParamError(BaseError):
         self.param = param
 
 
-class AddError(BaseError):
-    pass
+class PageExistError(BaseError):
+    def __init__(self, page):
+        BaseError.__init__(self, "Page %s has already exist" % page)
+        self.page = page
 
 
 class PageNotFoundError(BaseError):
     def __init__(self, page):
         BaseError.__init__(self, "Page %s not found" % page)
         self.page = page
+
+
+class MissingActionError(BaseError):
+    def __init__(self, action=None):
+        if action is None:
+            message = "Missing action request"
+        else:
+            message = "Missing %s request" % action
+        BaseError.__init__(self, message)
+        self.message = message

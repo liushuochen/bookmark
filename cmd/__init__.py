@@ -1,5 +1,5 @@
 import error
-from cmd.page import PageAdd, PageDrop
+from cmd.page import PageAdd, PageDrop, PageEdit
 from cmd.help import Help
 from cmd.version import Version
 from cmd.default import Default
@@ -22,11 +22,11 @@ def get_version(param):
 def add_page(param):
     name = param.get("action_value", None)
     if name is None:
-        raise error.AddError("missing name request")
+        raise error.MissingActionError(name)
 
     url = param.get("url", None)
     if url is None:
-        raise error.AddError("missing url request")
+        raise error.MissingActionError(url)
 
     debug = param.get("debug", False)
     file = param.get("path", None)
@@ -36,11 +36,23 @@ def add_page(param):
 def drop_page(param):
     name = param.get("action_value", None)
     if name is None:
-        raise error.AddError("missing name request")
+        raise error.MissingActionError(name)
 
     debug = param.get("debug", False)
     file = param.get("path", None)
     return PageDrop(name, debug, file)
+
+
+def edit_page(param):
+    name = param.get("action_value", None)
+    if name is None:
+        raise error.MissingActionError(name)
+
+    new_name = param.get("name", None)
+    new_url = param.get("url", None)
+    debug = param.get("debug", False)
+    file = param.get("path", None)
+    return PageEdit(name, new_name, new_url, debug, file)
 
 
 # class Open(ActionBase):

@@ -41,6 +41,7 @@ class Action(object):
         self.__help = "help"
         self.__version = "version"
         self.__open = "open"
+        self.__edit = "edit"
 
     @property
     def add(self):
@@ -61,6 +62,10 @@ class Action(object):
     @property
     def open(self):
         return self.__open
+
+    @property
+    def edit(self):
+        return self.__edit
 
 
 action = Action()
