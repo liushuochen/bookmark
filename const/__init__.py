@@ -43,6 +43,7 @@ class Action(object):
         self.__open = "open"
         self.__edit = "edit"
         self.__list = "list"
+        self.__describe = "describe"
 
     @property
     def add(self):
@@ -71,6 +72,10 @@ class Action(object):
     @property
     def list(self):
         return self.__list
+
+    @property
+    def describe(self):
+        return self.__describe
 
 
 action = Action()

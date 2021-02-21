@@ -43,6 +43,7 @@ def parse_action(action):
         const.action.open,
         const.action.edit,
         const.action.list,
+        const.action.describe,
     }
 
     if action not in support_operator:

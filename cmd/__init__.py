@@ -61,6 +61,16 @@ def list_page(param):
     return cmd.page.PageList(debug, file)
 
 
+def get_page(param):
+    name = param.get("action_value", None)
+    if name is None:
+        raise error.MissingActionError(name)
+
+    debug = param.get("debug", False)
+    file = param.get("path", None)
+    return cmd.page.PageDetail(name, file)
+
+
 
 # class Open(ActionBase):
 #     def __init__(self, name, url):

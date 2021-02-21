@@ -124,6 +124,8 @@ class PageList(Base):
     def show_pages(self):
         table = PrettyTable()
         table.field_names = ["NAME", "URL"]
+        table.align["NAME"] = "l"
+        table.align["URL"] = "l"
         for name in self.pages:
             table.add_row([name, self.pages[name]])
         table.border = False
@@ -152,3 +154,37 @@ class PageList(Base):
             data = json.load(page_file)
         url = data["url"]
         self.pages[page_name.strip(".json")] = url
+
+
+class PageDetail(PageBase):
+    def __init__(self, name, log_file_path):
+        PageBase.__init__(self, name, False, log_file_path)
+        self.details = dict()
+
+    def execute(self):
+        if not self.exist(self.name):
+            raise PageNotFoundError(self.name)
+        self.get_details()
+        self.show()
+
+    def show(self):
+        table = PrettyTable()
+        table.field_names = ["ATTRIBUTE", "VALUE"]
+        table.align["ATTRIBUTE"] = "l"
+        table.align["VALUE"] = "l"
+        rows = [
+            ["name", self.details["name"]],
+            ["url", self.details["url"]],
+            ["create", self.details["create_time"]],
+            ["last update", self.details["update_time"]],
+            ["update times", self.details["update_times"]],
+        ]
+        table.add_rows(rows)
+        table.border = False
+        self.logger.console(table)
+
+    def get_details(self):
+        path = util.path_join(util.storage_path(), self.name+".json")
+        with open(path, "r") as file:
+            data = json.load(file)
+        self.details = data

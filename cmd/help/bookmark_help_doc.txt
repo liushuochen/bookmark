@@ -9,6 +9,12 @@ Usage:
         page           Operation of website.
 
     page
+        add             Add a new page.
+        drop            Drop a page.
+        edit            Edit a page.
+        list            Get a list of page.
+        describe        Get page details.
+
         1. Add a new page.
         bookmark page add <name> --url <url>
 
@@ -20,6 +26,9 @@ Usage:
 
         4. Get a list of page
         bookmark page list
+
+        5. Get page details
+        bookmark page describe <name>
 
         e.g.
         bookmark page add baidu --url http://www.baidu.com/
