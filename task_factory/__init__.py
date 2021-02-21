@@ -21,6 +21,8 @@ def task_factory(subcommand, action, param):
             instance = cmd.list_page(param)
         elif action == const.action.describe:
             instance = cmd.get_page(param)
+        elif action == const.action.open:
+            instance = cmd.open_page(param)
         else:
             raise error.InvalidActionError(action)
 

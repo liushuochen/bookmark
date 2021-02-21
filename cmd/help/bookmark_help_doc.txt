@@ -14,6 +14,7 @@ Usage:
         edit            Edit a page.
         list            Get a list of page.
         describe        Get page details.
+        open            Open a page.
 
         1. Add a new page.
         bookmark page add <name> --url <url>
@@ -29,6 +30,9 @@ Usage:
 
         5. Get page details
         bookmark page describe <name>
+
+        6. Open a page
+        bookmark page open <name>
 
         e.g.
         bookmark page add baidu --url http://www.baidu.com/

@@ -3,6 +3,7 @@ import json
 import datetime
 import os
 import threading
+import webbrowser
 from prettytable import PrettyTable
 from cmd.base import Base
 from error import PageExistError, PageNotFoundError
@@ -188,3 +189,20 @@ class PageDetail(PageBase):
         with open(path, "r") as file:
             data = json.load(file)
         self.details = data
+
+
+class PageOpen(PageBase):
+    def __init__(self, name, debug, log_file_path):
+        PageBase.__init__(self, name, debug, log_file_path)
+
+    def execute(self):
+        if not self.exist(self.name):
+            raise PageNotFoundError(self.name)
+        self.open()
+
+    def open(self):
+        path = util.path_join(util.storage_path(), self.name+".json")
+        with open(path, "r") as file:
+            data = json.load(file)
+        webbrowser.open(data["url"])
+        self.logger.info("open page %s finished." % self.name)
