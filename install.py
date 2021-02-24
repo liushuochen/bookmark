@@ -14,41 +14,83 @@ def check(func):
     return wrapper
 
 
-def shell_script_path():
-    return util.path_join(util.root_path(), "bookmark.sh")
+def add_eol(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        for index in range(len(result)):
+            result[index] += "\n"
+        return result
+    return wrapper
 
 
-def generate_bin_python_doc():
-    conf = ConfigParser()
-    conf.read(util.path_join(util.root_path(), "config/bookmark.ini"))
-    bin_py_path = conf.get("install", "bin_python_path")
-    python_script_list = [
-        "#!%s" % bin_py_path,
-        "import sys",
-        "import os",
-        "",
-        "",
-        "if __name__ == '__main__':",
-        "    args = \" \".join(sys.argv[1:])",
-        "    path = \"%s\"" % shell_script_path(),
-        "    command = \"%s %s\" % (path, args)",
-        "    os.system(command)"
-    ]
-    return python_script_list
+class Install(object):
+    def __init__(self):
+        c = ConfigParser()
+        c.read(util.path_join(util.root_path(), "config/bookmark.ini"))
+        self.bin_py_path = c.get("install", "bin_python_path")
+        self.start_cmd = c.get("install", "start_command")
 
+    @check
+    def run(self):
+        files_kwargs_list = [
+            {
+                "func": self.generate_shell_script,
+                "filename": "bookmark.sh",
+                "chmod": "740",
+            },
+            {
+                "func": self.generate_bin_python_doc,
+                "filename": "bookmark",
+                "path": "/usr/local/bin/",
+            },
+        ]
+        for kwargs in files_kwargs_list:
+            self.create_file(**kwargs)
+        print("install bookmark finished")
 
-@check
-def install():
-    python_script_list = generate_bin_python_doc()
-    for index in range(len(python_script_list)):
-        python_script_list[index] += "\n"
-    with open("bookmark", "w") as py_file:
-        py_file.write("".join(python_script_list))
+    @staticmethod
+    def create_file(func, filename, path="local", chmod="777"):
+        content = "".join(func())
+        with open(filename, "w") as file:
+            file.write(content)
 
-    os.system("chmod 777 bookmark")
-    os.system("mv bookmark /usr/local/bin/bookmark")
-    print("install bookmark finished")
+        command = "chmod %s %s" % (chmod, filename)
+        os.system(command)
+        if path != "local" and os.path.isdir(path):
+            file_path = os.path.join(path, filename)
+            command = "mv %s %s" % (filename, file_path)
+            os.system(command)
+
+    @staticmethod
+    def shell_script_path():
+        return util.path_join(util.root_path(), "bookmark.sh")
+
+    @add_eol
+    def generate_bin_python_doc(self):
+        python_script_list = [
+            "#!%s" % self.bin_py_path,
+            "import sys",
+            "import os",
+            "",
+            "",
+            "if __name__ == '__main__':",
+            "    args = \" \".join(sys.argv[1:])",
+            "    path = \"%s\"" % self.shell_script_path(),
+            "    command = \"%s %s\" % (path, args)",
+            "    os.system(command)"
+        ]
+        return python_script_list
+
+    @add_eol
+    def generate_shell_script(self):
+        shell_script_list = [
+            "base_dir=$(cd $(dirname $0) && pwd)",
+            "",
+            "cd \"${base_dir}\"",
+            "%s bookmark.py $@" % self.start_cmd,
+        ]
+        return shell_script_list
 
 
 if __name__ == '__main__':
-    install()
+    Install().run()

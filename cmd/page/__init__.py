@@ -154,7 +154,7 @@ class PageList(Base):
         with open(path, "r") as page_file:
             data = json.load(page_file)
         url = data["url"]
-        self.pages[page_name.strip(".json")] = url
+        self.pages[page_name.replace(".json", "")] = url
 
 
 class PageDetail(PageBase):
