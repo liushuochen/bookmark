@@ -28,7 +28,8 @@ class Install(object):
         c = ConfigParser()
         c.read(util.path_join(util.root_path(), "config/bookmark.ini"))
         self.bin_py_path = c.get("install", "bin_python_path")
-        self.start_cmd = c.get("install", "start_command")
+        self.python_cmd = c.get("install", "python_command")
+        self.pip_cmd = c.get("install", "pip_command")
 
     @check
     def run(self):
@@ -36,7 +37,6 @@ class Install(object):
             {
                 "func": self.generate_shell_script,
                 "filename": "bookmark.sh",
-                "chmod": "740",
             },
             {
                 "func": self.generate_bin_python_doc,
@@ -46,6 +46,7 @@ class Install(object):
         ]
         for kwargs in files_kwargs_list:
             self.create_file(**kwargs)
+        self.install_dependency_module()
         print("install bookmark finished")
 
     @staticmethod
@@ -87,9 +88,24 @@ class Install(object):
             "base_dir=$(cd $(dirname $0) && pwd)",
             "",
             "cd \"${base_dir}\"",
-            "%s bookmark.py $@" % self.start_cmd,
+            "%s bookmark.py $@" % self.python_cmd,
         ]
         return shell_script_list
+
+    def install_dependency_module(self):
+        module_list = ["prettytable"]
+        for module in module_list:
+            try:
+                import module
+                print("dependency module %s exists." % module)
+            except ModuleNotFoundError:
+                command = "%s install %s > /dev/null 2>&1" % \
+                          (self.pip_cmd, module)
+                if os.system(command) != 0:
+                    print("Install module %s failed. Please install the "
+                          "dependent module %s manually and rerun the "
+                          "install.py" % (module, module))
+                    exit(1)
 
 
 if __name__ == '__main__':
