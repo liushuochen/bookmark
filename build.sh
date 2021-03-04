@@ -16,7 +16,7 @@ function build {
         cp -r "${dir}" bookmark/
     done
 
-    files=(bookmark.py install.py uninstall.py util.py)
+    files=(bookmark.py install.py uninstall.py util.py requirements.txt)
     for file in ${files[*]}; do
         cp -r "${file}" bookmark/
     done

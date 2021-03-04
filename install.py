@@ -1,7 +1,19 @@
 # install bookmark
+# pip freeze > requirements.txt
+
 import util
 import os
 from configparser import ConfigParser
+
+
+class RequirementsInstallFailed(Exception):
+    def __init__(self):
+        self.message = "load requirements failed."
+
+    def __repr__(self):
+        return self.message
+
+    __str__ = __repr__
 
 
 def check(func):
@@ -46,8 +58,13 @@ class Install(object):
         ]
         for kwargs in files_kwargs_list:
             self.create_file(**kwargs)
-        self.install_dependency_module()
-        print("install bookmark finished")
+
+        try:
+            self.install_dependency_module()
+        except RequirementsInstallFailed as e:
+            print(e)
+        else:
+            print("install bookmark finished")
 
     @staticmethod
     def create_file(func, filename, path="local", chmod="777"):
@@ -92,20 +109,12 @@ class Install(object):
         ]
         return shell_script_list
 
-    def install_dependency_module(self):
-        module_list = ["prettytable"]
-        for module in module_list:
-            try:
-                import module
-                print("dependency module %s exists." % module)
-            except ModuleNotFoundError:
-                command = "%s install %s > /dev/null 2>&1" % \
-                          (self.pip_cmd, module)
-                if os.system(command) != 0:
-                    print("Install module %s failed. Please install the "
-                          "dependent module %s manually and rerun the "
-                          "install.py" % (module, module))
-                    exit(1)
+    @staticmethod
+    def install_dependency_module():
+        path = os.path.join(util.root_path(), "requirements.txt")
+        command = "pip install -r %s > /dev/null 2>&1" % path
+        if os.system(command) != 0:
+            raise RequirementsInstallFailed()
 
 
 if __name__ == '__main__':
