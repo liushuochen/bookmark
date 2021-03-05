@@ -7,6 +7,7 @@ Usage:
         help           Print help documents.
         version        Get bookmark version.
         page           Operation of website.
+        folder         Operation of page folder.
 
     page
         add             Add a new page.
@@ -36,3 +37,31 @@ Usage:
 
         e.g.
         bookmark page add baidu --url http://www.baidu.com/
+
+    folder:
+        add        Add a folder.
+        drop       Drop a folder.
+        edit       Edit a folder.
+        list       Get a list of folder.
+        desc       Get folder details.
+        use        Use a folder.
+        current    Get current use folder.
+        resize     Resize a folder.
+
+        1. Add a folder
+        bookmark folder add <name> --desc <describe>
+
+        2. Drop a folder
+        bookmark folder drop <name>
+
+        3. Edit a folder
+        bookmark folder edit <name> --name <new_name> --desc <new_desc>
+
+        4. Use an another folder
+        bookmark folder use <name>
+
+        5. Get current folder
+        bookmark folder current
+
+        6. Resize folder
+        bookmark folder resize
