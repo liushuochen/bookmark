@@ -47,8 +47,14 @@ class PageAdd(PageBase):
             "name": self.name,
             "url": self.url,
             "create_time": now,
-            "update_time": now,
-            "update_times": 0,
+            "update": {
+                "times": 0,
+                "time": now
+            },
+            "use": {
+                "times": 0,
+                "last_time": None
+            }
         }
 
         with open(path, "w") as page_file:
@@ -102,8 +108,8 @@ class PageEdit(PageBase):
             data["name"] = self.new_name
         if self.url is not None:
             data["url"] = self.url
-        data["update_time"] = now
-        data["update_times"] += 1
+        data["update"]["time"] = now
+        data["update"]["times"] += 1
 
         with open(old_path, "w") as page_file:
             page_file.write(json.dumps(data, cls=PageEncoder, indent=4))
@@ -133,6 +139,9 @@ class PageList(Base):
         self.logger.console(table)
 
     def get_pages_simple_message(self):
+        if not os.path.isdir(util.storage_path()):
+            return
+
         name_list = os.listdir(util.storage_path())
         thread_list = []
         for name in name_list:
@@ -177,8 +186,10 @@ class PageDetail(PageBase):
             ["name", self.details["name"]],
             ["url", self.details["url"]],
             ["create", self.details["create_time"]],
-            ["last update", self.details["update_time"]],
-            ["update times", self.details["update_times"]],
+            ["last update", self.details["update"]["time"]],
+            ["update times", self.details["update"]["times"]],
+            ["use times", self.details["use"]["times"]],
+            ["last use", self.details["use"]["last_time"]],
         ]
         table.add_rows(rows)
         table.border = False
@@ -199,6 +210,18 @@ class PageOpen(PageBase):
         if not self.exist(self.name):
             raise PageNotFoundError(self.name)
         self.open()
+        self.add_use_count()
+
+    def add_use_count(self):
+        path = util.path_join(util.storage_path(), self.name + ".json")
+        with open(path, "r") as file:
+            data = json.load(file)
+
+        data["use"]["times"] += 1
+        data["use"]["last_time"] = datetime.datetime.now()
+
+        with open(path, "w") as page_file:
+            page_file.write(json.dumps(data, cls=PageEncoder, indent=4))
 
     def open(self):
         path = util.path_join(util.storage_path(), self.name+".json")
